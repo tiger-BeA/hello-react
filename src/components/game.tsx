@@ -4,26 +4,28 @@ import { Board } from './board';
 
 export type Player = 'X' | 'O';
 
-interface StateType {
-  history: Step[];
-  player: 'X' | 'O';
-  stepNumber: number;
-}
+type StateType = {
+  readonly history: Step[];
+  readonly player: 'X' | 'O';
+  readonly stepNumber: number;
+};
 
-export interface Step {
-  squares: (Player | undefined)[];
-}
+export type Step = {
+  readonly squares: (Player | undefined)[];
+};
 
 export class Game extends React.Component<any, StateType> {
   constructor(props: any) {
     super(props);
     this.state = {
-      history: [ {
-        squares: Array(9),
-      } ],
+      history: [
+        {
+          squares: Array(9),
+        },
+      ],
       player: 'X',
       stepNumber: 0,
-    }
+    };
   }
 
   render() {
@@ -35,8 +37,7 @@ export class Game extends React.Component<any, StateType> {
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={currentSquares}
-                 onCustomClick={(index) => this.handleClick(index)} />
+          <Board squares={currentSquares} onCustomClick={(index) => this.handleClick(index)} />
         </div>
         <div className="game-info">
           <div className="status">{status}</div>
@@ -51,11 +52,9 @@ export class Game extends React.Component<any, StateType> {
     if (calculateWinner(squares) || squares[index]) {
       return;
     }
-    console.log(squares);
     squares[index] = this.state.player;
     this.add2History(squares);
     this.togglePlayer();
-    console.log(squares);
   }
 
   togglePlayer() {
@@ -69,7 +68,10 @@ export class Game extends React.Component<any, StateType> {
 
   add2History(squares: (Player | undefined)[]) {
     const { history } = this.state;
-    this.setState({ history: history.concat([ { squares } ]), stepNumber: this.state.stepNumber + 1 });
+    this.setState({
+      history: history.concat([{ squares }]),
+      stepNumber: this.state.stepNumber + 1,
+    });
   }
 
   getHistoryDesc() {
@@ -79,14 +81,14 @@ export class Game extends React.Component<any, StateType> {
         <li key={index}>
           <button onClick={() => this.jumpTo(index)}>{desc}</button>
         </li>
-      )
-    })
+      );
+    });
   }
 
   jumpTo(index: number) {
     this.setState({
       stepNumber: index,
-      player: (index % 2 === 0) ? 'X' : 'O',
+      player: index % 2 === 0 ? 'X' : 'O',
     });
   }
 }

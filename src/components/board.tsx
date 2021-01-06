@@ -2,38 +2,30 @@ import React from 'react';
 import { Step } from './game';
 import { Square } from './square';
 
-type PropsType = Step & { onCustomClick: (index: number) => void }
+type PropsType = Step & { readonly onCustomClick: (index: number) => void };
 
-export class Board extends React.Component<PropsType> {
-  constructor(props: PropsType) {
-    super(props);
-  }
-
-  renderSquare(index: number) {
-    return <Square value={this.props.squares[index]}
-                   onCustomClick={() => this.props.onCustomClick(index)}
-    />;
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+export const Board = (props: PropsType) => {
+  return (
+    <div>
+      <div className="board-row">
+        {renderSquare(props, 0)}
+        {renderSquare(props, 1)}
+        {renderSquare(props, 2)}
       </div>
-    );
-  }
+      <div className="board-row">
+        {renderSquare(props, 3)}
+        {renderSquare(props, 4)}
+        {renderSquare(props, 5)}
+      </div>
+      <div className="board-row">
+        {renderSquare(props, 6)}
+        {renderSquare(props, 7)}
+        {renderSquare(props, 8)}
+      </div>
+    </div>
+  );
+};
+
+function renderSquare({ squares, onCustomClick }: PropsType, index: number) {
+  return <Square value={squares[index]} onCustomClick={() => onCustomClick(index)} />;
 }
