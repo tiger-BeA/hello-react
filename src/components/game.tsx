@@ -1,21 +1,17 @@
 import React from 'react';
+import { Player } from '../data/player';
+import { Step } from '../data/step';
 import { calculateWinner } from '../utils/calc';
 import { Board } from './board';
 
-export type Player = 'X' | 'O';
-
-type StateType = {
+interface StateType {
   readonly history: Step[];
   readonly player: 'X' | 'O';
   readonly stepNumber: number;
-};
+}
 
-export type Step = {
-  readonly squares: (Player | undefined)[];
-};
-
-export class Game extends React.Component<any, StateType> {
-  constructor(props: any) {
+export class Game extends React.Component<unknown, StateType> {
+  public constructor(props: unknown) {
     super(props);
     this.state = {
       history: [
@@ -28,7 +24,7 @@ export class Game extends React.Component<any, StateType> {
     };
   }
 
-  render() {
+  public render() {
     const currentSquares = this.getCurrentSquares();
     const winner = calculateWinner(currentSquares);
     const status = winner ? `Winner：${winner}` : `Next player: ${this.state.player}`;
@@ -47,7 +43,7 @@ export class Game extends React.Component<any, StateType> {
     );
   }
 
-  handleClick(index: number) {
+  private handleClick(index: number) {
     const squares = this.getCurrentSquares();
     if (calculateWinner(squares) || squares[index]) {
       return;
@@ -57,16 +53,16 @@ export class Game extends React.Component<any, StateType> {
     this.togglePlayer();
   }
 
-  togglePlayer() {
-    return this.setState({ player: this.state.player === 'X' ? 'O' : 'X' });
+  private togglePlayer() {
+    this.setState({ player: this.state.player === 'X' ? 'O' : 'X' });
   }
 
-  getCurrentSquares() {
+  private getCurrentSquares() {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     return history[history.length - 1].squares.slice();
   }
 
-  add2History(squares: (Player | undefined)[]) {
+  private add2History(squares: (Player | undefined)[]) {
     const { history } = this.state;
     this.setState({
       history: history.concat([{ squares }]),
@@ -74,7 +70,7 @@ export class Game extends React.Component<any, StateType> {
     });
   }
 
-  getHistoryDesc() {
+  private getHistoryDesc() {
     return this.state.history.map((step, index) => {
       const desc = index ? `Go to move #${index}` : 'Go to game start';
       return (
@@ -85,10 +81,11 @@ export class Game extends React.Component<any, StateType> {
     });
   }
 
-  jumpTo(index: number) {
+  private jumpTo(index: number) {
     this.setState({
       stepNumber: index,
       player: index % 2 === 0 ? 'X' : 'O',
     });
+    this.setState({ history: this.state.history.slice(0, index + 1) });
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Step } from './game';
+import { Step } from '../data/step';
 import { Square } from './square';
 
 type PropsType = Step & { readonly onCustomClick: (index: number) => void };

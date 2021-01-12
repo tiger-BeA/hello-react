@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "lint": "eslint src/ --ext .ts,.tsx,.js,.jsx,.cjs,.mjs",
+    "lint:fix": "eslint src/ --fix --ext .ts,.tsx,.js,.jsx,.cjs,.mjs"
   },
   "dependencies": {
     "react": "^17.0.0",
@@ -13,6 +15,7 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@monkey-design/eslint-config-mkd-react": "^0.1.0-alpha.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@vitejs/plugin-react-refresh": "^1.1.0",
