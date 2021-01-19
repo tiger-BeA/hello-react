@@ -200,4 +200,103 @@ const Square: FC<PropsType> = ({ children }) => {  
 - [vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project)
 - [webpack 5](https://www.webpackjs.com/concepts/)
 - [react-fresh](https://juejin.cn/post/6890471535295856654)
+- Tailwind CSS
+
+# 高级指引
+
+## 代码分割
+
+### Fragment
+
+<Fragment> 类似 <ng-container>，当没有任何属性时，可用 <></> 短语法表示，暂时 Fragment 的属性只支持 key
+
+### 懒加载
+
+```jsx
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+<Suspense fallback={<div>Loading...</div>}>
+  <OtherComponent />
+</Suspense>
+```
+
+### 异常捕获边界
+
+如果一个 class 组件中定义了 [`static getDerivedStateFromError()`](https://react.docschina.org/docs/react-component.html#static-getderivedstatefromerror) 或 [`componentDidCatch()`](https://react.docschina.org/docs/react-component.html#componentdidcatch) 这两个生命周期方法中的任意一个（或两个）时，那么它就变成一个错误边界。当抛出错误后，请使用 `static getDerivedStateFromError()` 渲染备用 UI ，使用 `componentDidCatch()` 打印错误信息
+
+### 命名导出
+
+React.lazy 目前只支持export default 的导致，如果要重命名导出，可以创建一个中间模块重命名
+
+```jsx
+export {MyComponent as default} from './ManyComponent';
+// 或者
+import {MyComponent} from './MangComponent';
+export default MyComponent;
+```
+
+## context vs 组件组合
+
+### [context](https://react.docschina.org/docs/context.html)
+
+优点：很多不同层级的组件需要访问同样的数据
+
+缺点：会使组件的复用性变差
+
+适用场景：管理当前的 locale、theme、缓存数据等
+
+介绍：
+
+```tsx
+// 声明
+const ThemeContext = React.createContext('light'); // light 为默认值
+    
+// 使用
+<ThemeContext.Provider value="dark">
+  <OtherComponent />
+</ThemeContext.Provider>
+
+function OtherCompoent() {
+  return <ThemedButton />
+}
+
+function ThemedButton() {
+  // 指定 contextType 读取当前的 theme context。
+  // React 会往上找到最近的 theme Provider，然后使用它的值。
+  // 在这个例子中，当前的 theme 值为 “dark”。
+	this.contextType = ThemeContext;
+  return <Button theme={this.context} />
+}
+```
+
+
+
+### 组件组合
+
+如果只是想避免层层传递一些属性，组件组合比 context 更好
+
+例如 user 和 avatarSize 数据仅顶层的 Page 组件知晓，需要在底层的 Avatar 组件中获取 user 信息进行渲染，中间组件无须知道 user 和 avatarSize，可以直接在 Page 中将 Avatar 直接渲染好，将 Avatar 层层传递下去，这样就将多个数据的 props 合成一个 children 的 props 进行传递，有效减少需要传递的 props 数量
+
+优点：减少了应用中需要层层传递的 props 数量
+
+缺点：
+
+- 将子组件渲染逻辑提升到组件树的更高层次来处理，会使得高层组件变得复杂
+- 可能会传递多个子组件，然后为多个子组件封装多个单独的 slots，可能用 props.children 去获取对应的 slot
+
+> 如果children 在渲染前需要和父组件进行交流，可以用 [render props](https://react.docschina.org/docs/render-props.html)
+
+## Refs 转发
+
+`React.forwardRef()`
+
+## 高阶组件
+
+组件是将 props 转换为 UI，而高阶组件是将组件转换为另一个组件。
+
+HOC 在 React 的第三方库中很常见，例如 Redux 的 [`connect`](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect) 和 Relay 的 [`createFragmentContainer`](http://facebook.github.io/relay/docs/en/fragment-container.html)
+
+**HOC 不应该修改传入组件，而应该使用组合的方式，通过将组件包装在容器组件中实现功能**
+
+HOC 为组件添加特性。自身不应该大幅改变约定。HOC 返回的组件与原组件应保持类似的口，HOC 应该透传与自身无关的 props
 

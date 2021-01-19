@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^17.0.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -19,6 +20,7 @@
     "@monkey-design/eslint-config-mkd-react": "^0.1.0-alpha.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react-refresh": "^1.1.0",
     "doctoc": "^2.0.0",
     "husky": "^4.3.6",

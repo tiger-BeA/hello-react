@@ -1,7 +1,7 @@
 import React from 'react';
-import { Player } from '../data/player';
-import { Step } from '../data/step';
-import { calculateWinner } from '../utils/calc';
+import { Player } from '../../data/player';
+import { Step } from '../../data/step';
+import { calculateWinner } from '../../utils/calc';
 import { Board } from './board';
 
 interface StateType {
@@ -54,7 +54,7 @@ export class Game extends React.Component<unknown, StateType> {
   }
 
   private togglePlayer() {
-    this.setState({ player: this.state.player === 'X' ? 'O' : 'X' });
+    this.setState(({ player }) => ({ player: player === 'X' ? 'O' : 'X' }));
   }
 
   private getCurrentSquares() {
@@ -64,18 +64,21 @@ export class Game extends React.Component<unknown, StateType> {
 
   private add2History(squares: (Player | undefined)[]) {
     const { history } = this.state;
-    this.setState({
+    this.setState(({ stepNumber }) => ({
       history: history.concat([{ squares }]),
-      stepNumber: this.state.stepNumber + 1,
-    });
+      stepNumber: stepNumber + 1,
+    }));
   }
 
   private getHistoryDesc() {
     return this.state.history.map((step, index) => {
       const desc = index ? `Go to move #${index}` : 'Go to game start';
       return (
+        // eslint-disable-next-line react/no-array-index-key
         <li key={index}>
-          <button onClick={() => this.jumpTo(index)}>{desc}</button>
+          <button onClick={() => this.jumpTo(index)} type="button">
+            {desc}
+          </button>
         </li>
       );
     });
@@ -86,6 +89,6 @@ export class Game extends React.Component<unknown, StateType> {
       stepNumber: index,
       player: index % 2 === 0 ? 'X' : 'O',
     });
-    this.setState({ history: this.state.history.slice(0, index + 1) });
+    this.setState(({ history }) => ({ history: history.slice(0, index + 1) }));
   }
 }

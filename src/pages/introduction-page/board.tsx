@@ -1,7 +1,8 @@
 import React from 'react';
-import { Step } from '../data/step';
+import { Step } from '../../data/step';
 import { Square } from './square';
 
+// eslint-disable-next-line react/no-unused-prop-types
 type PropsType = Step & { readonly onCustomClick: (index: number) => void };
 
 export const Board = (props: PropsType) => {
